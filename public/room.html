@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<body>
+
+<div class='container-fluid custom-container'>
+    <div class='row'>
+        <div id="1" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="2" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="3" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+    </div>
+    <div class='row'>
+        <div id="4" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="5" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="6" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+    </div>
+    <div class='row'>
+        <div id="7" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="8" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+        <div id="9" class='col-xs-12 col-md-4 custom' onclick="select(this)"></div>
+    </div>
+</div>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+<script>
+  const client = io('127.0.0.1:3000')
+  const urlParams = new URLSearchParams(window.location.search)
+
+  let canPlay = false
+  const isOwner = urlParams.get('type') === 'owner'
+  const symbol = isOwner ? 'X' : 'O'
+  const roomId = urlParams.get('id')
+
+  client.on('connect', () => {
+    console.log('Connected to server')
+    const eventType = isOwner ? 'update-owner' : 'update-opponent'
+    client.emit(eventType, { roomId })
+  })
+
+  client.on('begin-game', () => {
+    console.log('beginning game, your turn')
+    canPlay = true
+  })
+
+  client.on('next-turn', data => {
+    console.log('incoming data', data)
+    const elem = document.getElementById(data.position)
+    console.log(elem)
+    document.getElementById(data.position).innerText = data.symbol
+    canPlay = true
+  })
+
+  function select(item) {
+    if (!canPlay || !symbol) return
+
+    item.innerText = symbol
+    canPlay = false
+    client.emit('played', { symbol, position: item.id, roomId, isOwner })
+  }
+</script>
+</html>

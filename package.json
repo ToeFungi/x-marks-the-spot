@@ -1,0 +1,51 @@
+{
+  "name": "x-marks-the-spot",
+  "version": "1.0.0",
+  "description": "Naughts and crosses multiplayer game",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha",
+    "start": "node build/index.js",
+    "heroku-postbuild": "npm run build",
+    "watch:dev": "nodemon -w src/index.ts",
+    "coverage": "nyc --reporter=lcov mocha"
+  },
+  "keywords": [
+    "SocketIO",
+    "Express"
+  ],
+  "author": "Alex Pickering",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "4.2.11",
+    "@types/chai-as-promised": "7.1.2",
+    "@types/express": "4.17.6",
+    "@types/mocha": "7.0.2",
+    "@types/node": "13.13.5",
+    "@types/sinon": "9.0.0",
+    "@types/socket.io": "2.1.8",
+    "@types/sinon-chai": "3.2.4",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "mocha": "7.1.2",
+    "nodemon": "2.0.3",
+    "nyc": "15.0.1",
+    "sinon": "9.0.2",
+    "sinon-chai": "3.5.0",
+    "sonar-scanner": "3.1.0",
+    "ts-node": "8.6.2",
+    "tslint": "6.1.2",
+    "tslint-config-standard": "9.0.0",
+    "typescript": "3.8.3"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "socket.io": "2.3.0"
+  },
+  "babel": {
+    "presets": [
+      "latest"
+    ]
+  }
+}

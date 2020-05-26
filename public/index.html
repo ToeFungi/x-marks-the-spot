@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input id="username" aria-label="username" type="text" placeholder="username"/>
+<button onclick="createRoom()">Create Room</button>
+<br>
+<input id="join-room" aria-label="join-room" type="text" placeholder="room id"/>
+<button onclick="joinRoom()">Join Room</button>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+<script>
+  const client = io('127.0.0.1:3000')
+
+  client.on('connect', () => console.log('Connected to server'))
+  client.on('created-room', room => {
+    window.location = `${window.origin}/room?username=${room.owner}&id=${room.id}&type=owner`
+  })
+  client.on('joined-room', room => {
+    window.location = `${window.origin}/room?username=${room.opponent}&id=${room.id}&type=opponent`
+  })
+
+  function createRoom() {
+    const username = document.getElementById('username').value
+    if (username.length < 5) {
+      return alert('Username needs to be at least 5 characters')
+    }
+
+    client.emit('create-room', { username })
+  }
+
+  function joinRoom() {
+    const roomId = document.getElementById('join-room').value
+    const username = document.getElementById('username').value
+
+    if (username.length < 5) {
+      return alert('Username needs to be at least 5 characters')
+    }
+
+    if (!roomId) {
+      return alert('Room ID must exist')
+    }
+
+    client.emit('join-room', { roomId, username })
+  }
+</script>
+</html>
