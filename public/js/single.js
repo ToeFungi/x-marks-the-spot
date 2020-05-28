@@ -1,6 +1,13 @@
 // https://codepen.io/emilygoldfein/pen/LybZWN
 const modal = document.getElementById('myModal')
 
+const urlParams = new URLSearchParams(window.location.search)
+
+let canPlay = false
+const isOwner = urlParams.get('type') === 'owner'
+const symbol = isOwner ? 'X' : 'O'
+const roomId = urlParams.get('id')
+
 let grid = new Array(9)
 
 let player = 1
