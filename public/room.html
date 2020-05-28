@@ -3,6 +3,10 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
       integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="css/index.css">
+<head>
+    <meta charset="UTF-8">
+    <title>X Marks the Spot</title>
+</head>
 <body>
 
 <div class='container-fluid custom-container'>
@@ -53,12 +57,40 @@
     canPlay = true
   })
 
+  function resetBoard() {
+    console.log('reset board')
+  }
+
   function select(item) {
     if (!canPlay || !symbol) return
+    if (item.innerText) return
 
     item.innerText = symbol
     canPlay = false
+
+    checkWin()
     client.emit('played', { symbol, position: item.id, roomId, isOwner })
+  }
+
+  function checkWin() {
+    const hasWon = winnerCheck(1, 2, 3) // Horz
+      || winnerCheck(4, 5, 6) // Horz
+      || winnerCheck(7, 8, 9) // Horz
+      || winnerCheck(1, 4, 7) // Vert
+      || winnerCheck(2, 5, 8) // Vert
+      || winnerCheck(3, 6, 9) // Vert
+      || winnerCheck(1, 5, 9) // Diag
+      || winnerCheck(3, 5, 7) // Diag
+
+    if (hasWon) alert('you won')
+  }
+
+  function winnerCheck(a, b, c) {
+    const first = document.getElementById(a).innerText
+    const second = document.getElementById(b).innerText
+    const third = document.getElementById(c).innerText
+
+    return first === second && first === third && first !== ''
   }
 </script>
 </html>
